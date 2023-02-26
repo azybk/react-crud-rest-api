@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Row, Table } from "react-bootstrap";
+import CourseEditModal from "./components/courseCreateEditModal";
 import CourseCreateModal from "./components/courseCreateModal";
+import CourseDeleteModal from "./components/courseDeleteModal";
 import courseService from "./utils/service";
 import storageManager from "./utils/storageManagement";
 
@@ -9,8 +11,33 @@ const MateriCRUD = () => {
     const [courses, setCourses] = useState([])
     const [showCreateModal, setShowCreateModal] = useState(false)
 
+    const [showEditModal, setShowEditModal] = useState(false)
+    const [selectedCourse, setSelectedCourse] = useState({})
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+
     const toggleCreateModal = () => {
         setShowCreateModal(!showCreateModal)
+    }
+
+    const openEditModal = (course) => {
+        setSelectedCourse(course)
+        setShowEditModal(true)
+    }
+
+    const closeEditModal = () => {
+        setSelectedCourse({})
+        setShowEditModal(false)
+    }
+
+    const openDeleteModal = (course) => {
+        setSelectedCourse(course)
+        setShowDeleteModal(true)
+    }
+
+    const closeDeleteModal = () => {
+        setSelectedCourse({})
+        setShowDeleteModal(false)
     }
 
     const fetchCourses = () => {
@@ -25,6 +52,20 @@ const MateriCRUD = () => {
     const handleAddCourse = (payload) => {
         courseService.addCourse(payload)
         toggleCreateModal()
+        fetchCourses()
+    }
+
+    const handleEditCourse = (payload) => {
+        const{id, ...others} = payload
+        courseService.updateCourse(id, others)
+        closeEditModal()
+        fetchCourses()
+    }
+
+    const handleDeleteCourse = () => {
+        const {id} = selectedCourse
+        courseService.deleteCourse(id)
+        closeDeleteModal()
         fetchCourses()
     }
 
@@ -55,7 +96,10 @@ const MateriCRUD = () => {
                                             <td>{index + 1}</td>
                                             <td>{item.title}</td>
                                             <td>{item.description}</td>
-                                            <td>Aksi</td>
+                                            <td>
+                                                <Button onClick={() => openEditModal(item)} variant={"warning"}>Edit</Button>&nbsp;
+                                                <Button onClick={() => openDeleteModal(item)} ariant={"danger"}>Delete</Button>
+                                            </td>
                                         </tr>
                                     )
                                 })}
@@ -66,7 +110,21 @@ const MateriCRUD = () => {
                 </Row>
             </Container>
 
-            <CourseCreateModal show={showCreateModal} handleClose={toggleCreateModal} handleSubmit={handleAddCourse} />
+            <CourseCreateModal 
+                show={showCreateModal} 
+                handleClose={toggleCreateModal} 
+                handleSubmit={handleAddCourse} />
+
+            <CourseEditModal 
+                show={showEditModal} 
+                handleClose={closeEditModal} 
+                handleSubmit={handleEditCourse} 
+                data={selectedCourse} />
+
+            <CourseDeleteModal 
+                show={showDeleteModal} 
+                handleClose={closeDeleteModal} 
+                onAgree={handleDeleteCourse} />
         </>
     )
 }

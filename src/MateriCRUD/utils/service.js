@@ -27,9 +27,35 @@ const getCourses = () => {
     return response
 }
 
+const updateCourse = (courseId, payload) => {
+    const listCourse = storageManager.get()
+    const updatedCourse = listCourse.map(item => {
+        if(item.id === courseId) {
+            return {
+                ...item, ...payload,
+            }
+        } 
+        return item      
+    })
+
+    storageManager.set(updatedCourse)
+    return {
+        data: payload
+    }
+}
+
+const deleteCourse = (courseId) => {
+    const listCourses = storageManager.get()
+    const newList = listCourses.filter(item => item.id !== courseId)
+
+    storageManager.set(newList)
+}
+
 const courseService = {
     getAllCourse: getCourses,
-    addCourse
+    addCourse,
+    updateCourse,
+    deleteCourse
 }
 
 export default courseService
