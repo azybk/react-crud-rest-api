@@ -3,7 +3,7 @@ import Layout from "./components/Layout"
 import CheckoutPage from "./pages/checkout"
 import DetailPage from "./pages/detail"
 import ProducListPage from "./pages/productList"
-import { Provider } from 'react-redux/'
+import { Provider } from "react-redux/"
 import store from './store'
 
 const router = createBrowserRouter([

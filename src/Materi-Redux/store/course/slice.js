@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import * as actionAct from './action'
+import * as courseAct from './action'
+
 
 export const courseSlice = createSlice({
     name: 'course',
@@ -14,21 +15,21 @@ export const courseSlice = createSlice({
             price: '',
             id: '',
         },
-        error: null
+        error: null,
     },
     reducers: {
         // untuk mengubah state
     },
     extraReducers: (builder) => {
         builder
-            .addCase(actionAct.getAll.pending, (state) => {
+            .addCase(courseAct.getAll.pending, (state) => {
                 state.loading = true
             })
-            .addCase(actionAct.getAll.fulfilled, (state, action) => {
+            .addCase(courseAct.getAll.fulfilled, (state, action) => {
                 state.loading = false
                 state.entities = action.payload
             })
-            .addCase(actionAct.getAll.rejected, (state, action) => {
+            .addCase(courseAct.getAll.rejected, (state, action) => {
                 state.loading = false
                 state.error = action.payload
             })
@@ -36,3 +37,4 @@ export const courseSlice = createSlice({
 })
 
 export default courseSlice.reducer
+
