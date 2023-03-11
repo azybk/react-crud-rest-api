@@ -2,13 +2,19 @@ import { useEffect, useState } from "react"
 import Card from "react-bootstrap/Card"
 import { useDispatch, useSelector } from "react-redux"
 import { getAll } from "../../store/course/action"
+import { useNavigate } from "react-router-dom"
 
 const ProductListPage = () => {
+    const navigate = useNavigate()
     const { entities, loading } = useSelector((state) => state.course)
     const dispatch = useDispatch()
 
     const fetchCourses = async() => {
         await dispatch(getAll())
+    }
+
+    const goToDetail = (courseId) => {
+        navigate(`/detail/${courseId}`)
     }
 
     useEffect(() => {
@@ -24,7 +30,7 @@ const ProductListPage = () => {
                     entities.length === 0 ? "belum ada data" :
                     entities.map((item, index) => {
                         return (
-                            <Card style={{ width: '18rem' }} key={index}>
+                            <Card style={{ width: '18rem', cursor: 'pointer' }} key={index} onClick={() => goToDetail(item.id)}>
                                 <Card.Img variant="top" src={item.image} />
                                 <Card.Body>
                                     <Card.Title>{item.title}</Card.Title>
